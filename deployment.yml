@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: periodictableservice-argocd
+  namespace: periodictableservice-argocd
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: periodictableservice-argocd
+  template:
+    metadata:
+      labels:
+        app: periodictableservice-argocd
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - image: registry.hub.docker.com/amegia1/periodictableservice-argocd:0.0.3-SNAPSHOT
+          imagePullPolicy: Always
+          name: spring-boot
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            successThreshold: 1
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            successThreshold: 1
+          resources:
+            requests:
+              memory: 64Mi
+            limits:
+              memory: 256M
