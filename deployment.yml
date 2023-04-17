@@ -17,7 +17,7 @@ spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - image: registry.hub.docker.com/amegia1/periodictableservice-argocd:0.0.3-SNAPSHOT
+        - image: registry.hub.docker.com/amegia1/periodictableservice-argocd:latest
           imagePullPolicy: Always
           name: spring-boot
           ports:
